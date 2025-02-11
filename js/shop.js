@@ -61,6 +61,12 @@ var products = [
         name: 'Toddler Frock',
         price: 9.99,
         type: 'clothes'
+    },
+    {
+        id: 9,
+        name: 'Toddler Frock',
+        price: 9.99,
+        type: 'clothes'
     }
 ]
 
