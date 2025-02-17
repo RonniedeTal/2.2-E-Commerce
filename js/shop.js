@@ -12,25 +12,26 @@ var cart = [];
 
 var total = 0;
 
+
 // Exercise 1
 function buy(id) {
     // 1. Loop for to the array products to get the item to add to cart
-    
-    const foundProduct = products.find( product => product.id == id )
+    const cartFinding= cart.find(product => product.id == id)
+        if (cartFinding==undefined){
+            const foundProduct = products.find( product => product.id == id )
+            cart.push( {...foundProduct, quantity:1} )
+           
+            }else{
+                cartFinding.quantity++
+            }    
     // 2. Add found product to the cart array
-    cart.push( foundProduct )
-    // if(cart.includes(undefined)){
-    //     cart.shift()
-    // }
-    if(cart.length!==0){
+    // if(cart.includes(undefined)){ //al loro con esto me daba undefined--- parche     
+  if(cart.length!==0){
         total++
         document.getElementById("count_product").innerHTML=total
     }
     console.log(cart);//no remover hasta finalizar
-    
 }
-
-
 
 
 // Exercise 2
@@ -46,22 +47,34 @@ function cleanCart() {
 
 function calculateTotal() {
     // Calculate total price of the cart using the "cartList" array
-    let reduce=cart.reduce((acc, actual)=>acc+actual.price, 0)
-    let total=document.getElementById("total_price");
-    total.innerHTML=reduce
+            let reduce=cart.reduce((acc, actual)=>acc+(actual.id==1?applyPromotionsCart():actual.price)*actual.quantity, 0)
+            let totalPrice=document.getElementById("total_price");
+             totalPrice.innerHTML=reduce.toFixed(2)
+             
+       
 }
-
-
 
 
 // Exercise 4
 function applyPromotionsCart() {
     // Apply promotions to each item in the array "cart"
+    let applyPromo=0
+    let promo=cart.find(({id})=>id==1)
+    if(promo.id==1&&promo.quantity>=3){
+        applyPromo=parseFloat(promo.price-(promo.price*0.20))
+        // console.log(applyPromo);
+    }else{
+        applyPromo=parseFloat(promo.price)
+        // console.log(applyPromo);   
+    }
+    return applyPromo 
 }
+
 
 // Exercise 5
 
 function printCart() {
+    calculateTotal()
     // Fill the shopping cart modal manipulating the shopping cart dom
     const cartList = document.getElementById('cart_list');
         cartList.innerHTML=""
@@ -70,11 +83,10 @@ function printCart() {
           cartArr.innerHTML=`
             <td>${eachProduct.name}</td>
             <td>${eachProduct.price}</td>
-            
-          `;
+             <td>${eachProduct.quantity}<button onclick="removeFromCart(${eachProduct.id})">👎 </button></td>
+             <td>${eachProduct.id===1?applyPromotionsCart():eachProduct.price}</td>`;
           return cartArr;
         });
-  
         cartList.append(...cartProducts);
       }
   
@@ -83,12 +95,23 @@ function printCart() {
 
 // Exercise 7
 function removeFromCart(id) {
-
+    const removeProduct= cart.findIndex(product=>product.id==id)
+    if(removeProduct!==-1){
+        const remove=cart[removeProduct]
+        if(remove.quantity>1){
+            remove.quantity--
+            total--
+        }else{
+            cart.splice(removeProduct, 1)
+            total--
+        }
+        document.getElementById("count_product").innerHTML = total;
+    }
+    printCart()
 }
 
 function open_modal() {
-   
-    calculateTotal()
+    // applyPromotionsCart()
     printCart();
 }
 
