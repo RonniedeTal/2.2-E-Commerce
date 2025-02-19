@@ -50,8 +50,6 @@ function calculateTotal() {
             let reduce=cart.reduce((acc, actual)=>acc+(actual.id==1?applyPromotionsCart():actual.price)*actual.quantity, 0)
             let totalPrice=document.getElementById("total_price");
              totalPrice.innerHTML=reduce.toFixed(2)
-             
-       
 }
 
 
